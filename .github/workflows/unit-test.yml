@@ -1,6 +1,10 @@
 name: Run PHP Unit Tests
 
-on: [push, pull_request]
+on: [pull_request]
+
+permissions:
+  pull-requests: write
+  issues: write
 
 jobs:
   phpunit-tests:
@@ -37,7 +41,6 @@ jobs:
         run: |
           echo y | bash ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 6.8.1
 
-
       - name: Run PHPUnit tests
         env:
           WP_TESTS_DB_NAME: wordpress_test
@@ -45,3 +48,26 @@ jobs:
           WP_TESTS_DB_PASS: root
           WP_TESTS_DB_HOST: 127.0.0.1
         run: vendor/bin/phpunit --configuration phpunit.xml
+
+      - name: Comment on PR if tests fail
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+            const commentBody = `
+            ❌ **PHPUnit Tests Failed**
+
+            You can check the full details here: [Workflow Run](${runUrl})
+
+            Please review and fix the errors.
+            `;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: commentBody
+            });
