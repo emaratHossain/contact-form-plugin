@@ -52,7 +52,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const prNumber = context.payload.pull_request.number;
-            const runUrl = context.runDetails.html_url;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
             const commentBody = `
             ❌ **PHPUnit Tests Failed**
 
