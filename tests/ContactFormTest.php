@@ -27,6 +27,7 @@ class ContactFormTest extends WP_UnitTestCase {
         $this->assertIsInt( $data['id'] );
     }
 
+    // Test for invalid email in submission
     public function test_handle_submission_invalid_email() {
         $request = new WP_REST_Request( 'POST', '/contact-form/v1/submit' );
         $request->set_header( 'Content-Type', 'application/json' );
