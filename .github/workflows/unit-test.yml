@@ -35,7 +35,8 @@ jobs:
 
       - name: Download WP testing suite
         run: |
-          bash ./bin/install-wp-tests.sh wordpress_test root root localhost 6.8.1 --yes
+          echo y | bash ./bin/install-wp-tests.sh wordpress_test root root localhost 6.8.1
+
 
       - name: Run PHPUnit tests
         env:
