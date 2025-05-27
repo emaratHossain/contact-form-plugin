@@ -12,7 +12,7 @@ class ContactFormAPI {
             'permission_callback' => '__return_true',
             'args' => [
                 'name' => ['required' => true],
-                'email' => ['required' => true, 'validate_callback' => 'is_email'],
+                'email' => ['required' => true],
                 'message' => ['required' => true],
             ]
         ]);
@@ -21,7 +21,7 @@ class ContactFormAPI {
     public function handle_submission($request) {
         $params = $request->get_json_params();
 
-        if (!is_email($params['email'])) {
+        if (empty($params['email'])) {
             return new WP_REST_Response(['error' => 'Invalid email'], 400);
         }
 
