@@ -14,7 +14,7 @@ class ContactFormTest extends WP_UnitTestCase {
         $request->set_header( 'Content-Type', 'application/json' );
         $request->set_body( json_encode([
             'name' => 'John Doe',
-            'email' => 'john@example.com',
+            'email' => '',
             'message' => 'Hello, this is a test.',
         ]) );
 
